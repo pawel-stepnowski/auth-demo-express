@@ -34,7 +34,7 @@
                                 "type": { "const": "firestore" },
                                 "service_account": 
                                 {
-                                    "$ref": "http://liquescens/gcloud.schema.json#ServiceAccount"
+                                    "$ref": "https://raw.githubusercontent.com/pawel-stepnowski/auth-demo-express/refs/heads/master/schemas/gcloud.schema.json"
                                 }
                             }
                         }
