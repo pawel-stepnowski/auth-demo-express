@@ -1,0 +1,18 @@
+{
+    "name": "@liquescens/auth-js",
+    "version": "0.0.1",
+    "type": "module",
+    "main": "./index.js",
+    "types": "./index.d.ts",
+    "author": "Paweł Stepnowski",
+    "license": "ISC",
+    "description": "JavaScript implementation of a frontend authentication.",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/pawel-stepnowski/auth-js.git"
+    },
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org"
+    },
+    "keywords": ["auth", "authentication", "oauth2" ]
+  }

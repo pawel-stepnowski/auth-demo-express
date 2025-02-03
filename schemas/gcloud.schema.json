@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://liquescens/gcloud.schema.json#ServiceAccount",
+    "type": "object",
+    "properties":
+    {
+        "type": { "type": "string"},
+        "project_id": { "type": "string" },
+        "private_key_id": { "type": "string" },
+        "private_key": { "type": "string"},
+        "client_email": { "type": "string" },
+        "client_id": { "type": "string" },
+        "auth_uri": { "type": "string" },
+        "token_uri": { "type": "string" },
+        "auth_provider_x509_cert_url": { "type": "string"},
+        "client_x509_cert_url": { "type": "string" },
+        "universe_domain": { "type": "string" }
+    },
+    "required":
+    [
+        "type",
+        "project_id",
+        "private_key_id",
+        "private_key",
+        "client_email",
+        "client_id",
+        "auth_uri",
+        "token_uri",
+        "auth_provider_x509_cert_url",
+        "client_x509_cert_url",
+        "universe_domain"
+    ]
+  }

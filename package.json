@@ -1,0 +1,19 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "build:jsdoc": "node -e \"import { jsDoc } from './build/scripts/index.js'; jsDoc();\""
+  },
+  "dependencies": {
+    "@google-cloud/secret-manager": "^5.6.0",
+    "@liquescens/auth-js": "^0.0.1",
+    "@liquescens/auth-nodejs": "^0.0.1",
+    "ajv": "^8.17.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.2",
+    "json-schema-to-jsdoc": "^1.1.1",
+    "uuid": "^11.0.5"
+  }
+}
