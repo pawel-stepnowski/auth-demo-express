@@ -17,7 +17,7 @@ const path_local_cdn = 'C:/inetpub/wwwroot/cdn/auth-js';
 export function jsDoc()
 {
     const builder = new TypeDeclarationBuilder();
-    builder._addNamespace('http://liquescens/gcloud.schema.json#ServiceAccount', '', "import('firebase-admin').ServiceAccount");
+    builder._addNamespace('https://raw.githubusercontent.com/pawel-stepnowski/auth-demo-express/refs/heads/master/schemas/gcloud.schema.json', '', "import('firebase-admin').ServiceAccount");
     // builder.fromJsonSchema('ServiceAccount', JSON.parse(fs.readFileSync('./schemas/gcloud.schema.json', { encoding: 'utf-8' })));
     builder.fromJsonSchema('Configuration', JSON.parse(fs.readFileSync('./schemas/configuration.schema.json', { encoding: 'utf-8' })));
     const types = [...builder.namespaces.values()].flatMap(namespace => [...namespace.types.values()]);

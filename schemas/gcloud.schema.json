@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://liquescens/gcloud.schema.json#ServiceAccount",
+    "$id": "https://raw.githubusercontent.com/pawel-stepnowski/auth-demo-express/refs/heads/master/schemas/gcloud.schema.json",
     "type": "object",
     "properties":
     {
