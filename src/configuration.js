@@ -1,4 +1,4 @@
-import * as Auth from '@liquescens/auth-js';
+import * as Auth from '@liquescens/auth-nodejs';
 import { SecretManagerServiceClient  } from '@google-cloud/secret-manager';
 import Ajv2020 from "ajv"
 
@@ -12,7 +12,7 @@ export async function load()
         : await loadConfigurationFromSecretManagerService();
     const { application, cors, authentication } = await validateConfiguration(data);
     const { id, redirect_uri, return_uri } = authentication;
-    /** @type {Record<string, import('@liquescens/auth-js').OAuth2.Provider>} */
+    /** @type {Record<string, import('@liquescens/auth-nodejs').OAuth2.Provider>} */
     const providers = {};
     for (const [id, properties] of Object.entries(authentication.providers))
     {

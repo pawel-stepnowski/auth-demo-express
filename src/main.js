@@ -4,9 +4,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import * as Auth from '@liquescens/auth-js';
-/** @typedef {import('@liquescens/auth-js').Client} Client */
+import * as Auth from '@liquescens/auth-nodejs';
 import { ApplicationFactory } from './ApplicationFactory.js';
+
+/** @typedef {import('@liquescens/auth-js').Client} Client */
 
 const config = await Configuration.load();
 const { authentication, storage } = await new ApplicationFactory(config).create();
