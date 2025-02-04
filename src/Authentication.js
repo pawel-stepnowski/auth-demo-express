@@ -1,9 +1,10 @@
 import * as Auth from '@liquescens/auth-nodejs';
+/** @typedef {import('@liquescens/auth-nodejs').OAuth2.Provider} Provider */
 
 export class Authentication extends Auth.Authentication
 {
     /**
-     * @param {Record<string, import('@liquescens/auth-nodejs/oauth2/index.js').Provider>} providers 
+     * @param {Record<string, Provider>} providers 
      */
     constructor(providers)
     {
@@ -12,7 +13,7 @@ export class Authentication extends Auth.Authentication
 
     /**
      * @param {import('express').Request} request 
-     * @returns {{ provider: import('@liquescens/auth-nodejs/oauth2/index.js').Provider, authorization_code: string }}
+     * @returns {{ provider: Provider, authorization_code: string }}
      */
     handleRedirect(request)
     {

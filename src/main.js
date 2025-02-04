@@ -4,7 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import * as Auth from '@liquescens/auth-nodejs';
+import * as Auth from '@liquescens/auth-js';
 /** @typedef {import('@liquescens/auth-js').Client} Client */
 import { ApplicationFactory } from './ApplicationFactory.js';
 
