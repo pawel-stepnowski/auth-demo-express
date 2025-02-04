@@ -236,8 +236,7 @@ export class Storage
     {
         const account = this.db.collection('accounts').doc(account_id);
         const profile = await this._tryGetProfileDocument(account);
-        const data = profile ? profile.data() : undefined;
-        // @ts-ignore
+        const data = profile ? this._documentToProfile(profile) : undefined;
         return data;
     }
 
@@ -291,7 +290,7 @@ export class Storage
     {
         const data = document.data();
         const id = document.id;
-        const active_session_id = data?.active_session.id;
+        const active_session_id = data?.active_session?.id;
         return { id, active_session_id };
     }
 
@@ -320,6 +319,18 @@ export class Storage
         const provider_id = data?.provider_id;
         const external_id = data?.external_id;
         return { id, account_id, provider_id, external_id };
+    }
+
+    /**
+     * @param {DocumentSnapshot} document
+     * @returns {Profile}
+     */
+    _documentToProfile(document)
+    {
+        const data = document.data();
+        const display_name = data?.display_name;
+        const description = data?.description;
+        return { display_name, description };
     }
 }
 

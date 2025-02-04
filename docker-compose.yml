@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - C:/inetpub/secret-manager-access.json:/secrets/secret-manager-access.json
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/secrets/secret-manager-access.json
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - C:/inetpub/certificate.crt:/etc/nginx/certs/certificate.crt
+      - C:/inetpub/certificate.key:/etc/nginx/certs/certificate.key
+    depends_on:
+      - app

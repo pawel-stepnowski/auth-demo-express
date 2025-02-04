@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: auth-demo-express
+  namespace: authentication-library
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/authentication-library/auth-demo-express
+          ports:
+            - containerPort: 8080
+      timeoutSeconds: 300
+  traffic:
+    - percent: 100
+      latestRevision: true

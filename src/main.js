@@ -1,8 +1,6 @@
-import * as fs from 'fs';
 import * as UUID from 'uuid';
 import * as Configuration from './configuration.js';
 import express from 'express';
-import https from 'https';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -130,10 +128,10 @@ app.delete('/session', text_parser, async (request, response) =>
     response.send();
 });
 
-
-// dotnet dev-certs https --export-path ./certificate.crt --no-password --format PEM
-var key = fs.readFileSync('C:/inetpub/certificate.key');
-var cert = fs.readFileSync('C:/inetpub/certificate.crt');
 const listening_port = process.env.PORT || 8080;
-const server = https.createServer({ key, cert }, app);
-server.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });
+// dotnet dev-certs https --export-path ./certificate.crt --no-password --format PEM
+// var key = fs.readFileSync('C:/inetpub/certificate.key');
+// var cert = fs.readFileSync('C:/inetpub/certificate.crt');
+// const server = https.createServer({ key, cert }, app);
+// server.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });
+app.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });

@@ -38,7 +38,7 @@ async function validateConfiguration(configuration)
     // @ts-ignore
     const config_schema = await import("../schemas/configuration.schema.json", { with: { type: "json" } });
     const ajv = new Ajv2020.Ajv({ schemas: [gcloud_schema.default, config_schema.default] });
-    const validator = ajv.getSchema("file:///C:/Users/pawel/source/repos/pawel-stepnowski/authentication/auth-demo-express/schemas/configuration.schema.json");
+    const validator = ajv.getSchema("https://raw.githubusercontent.com/pawel-stepnowski/auth-demo-express/refs/heads/master/schemas/configuration.schema.json");
     if (!validator) throw new Error('TODO');
     const is_valid = validator(configuration);
     if (!is_valid)

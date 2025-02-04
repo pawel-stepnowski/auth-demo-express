@@ -2,3 +2,6 @@
 /test/Microsoft.ps1
 /.vscode/launch.json
 /.vs
+/dist
+/node_modules
+/package-lock.json

@@ -1,8 +1,5 @@
-import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { chdir } from 'process';
-import jsdoc from 'json-schema-to-jsdoc';
 import { TypeDeclarationBuilder } from './jsdoc.js';
 
 // @ts-ignore
@@ -26,12 +23,12 @@ export function jsDoc()
     types.forEach(type => { fs.appendFileSync(types_path, type); fs.appendFileSync(types_path, '\r\n'); });
 }
 
-// export function build()
-// {
-//     fs.rmSync(path_dist, { recursive: true, force: true });
-//     fs.cpSync(path_src, path_dist, { recursive: true });
-//     fs.copyFileSync(path.join(path_root, 'package.template.json'), path.join(path_dist, 'package.json'));
-// }
+export function build()
+{
+    fs.rmSync(path_dist, { recursive: true, force: true });
+    fs.cpSync(path_src, path_dist, { recursive: true });
+    fs.copyFileSync(path.join(path_root, 'package.template.json'), path.join(path_dist, 'package.json'));
+}
 
 // export function pack()
 // {
