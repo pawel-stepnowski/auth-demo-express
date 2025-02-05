@@ -9,6 +9,7 @@ export class Authentication extends Auth.Authentication
     constructor(providers)
     {
         super(providers);
+        this.providers = providers;
     }
 
     /**

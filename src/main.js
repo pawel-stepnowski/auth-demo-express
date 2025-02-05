@@ -1,10 +1,13 @@
 import * as UUID from 'uuid';
 import * as Configuration from './configuration.js';
+import * as Auth from '@liquescens/auth-nodejs';
+import * as AuthClient from '@liquescens/auth-js';
+import https from 'https';
+import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import * as Auth from '@liquescens/auth-nodejs';
 import { ApplicationFactory } from './ApplicationFactory.js';
 
 /** @typedef {import('@liquescens/auth-js').Client} Client */
@@ -48,6 +51,32 @@ function getClient(request)
     // @ts-ignore
     return request.client;
 }
+
+/**
+ * @returns {AuthClient.AuthenticationConfiguration}
+ */
+function getConfiguration()
+{
+    const service_id = config.authentication.id;
+    const base_uri = config.authentication.redirect_uri;
+    const redirect_uri = config.authentication.redirect_uri;
+    const providers = Object.values(config.authentication.providers).map(({ client_id, type }) => ({ client_id, type }));
+    return { service_id, base_uri, redirect_uri, providers };
+}
+
+app.get('/configuration', async (request, response) =>
+{
+    try
+    {
+        const configuration = getConfiguration();
+        response.send(configuration);
+    }
+    catch (exception)
+    {
+        console.error(exception);
+        response.status(400).send();
+    }
+});
 
 app.get('/profile', async (request, response) =>
 {
@@ -111,12 +140,12 @@ app.get('/auth', async (request, response) =>
         if (!client) { response.status(404).send(); return; }
         // TODO: jeśli istnieje sesja dokładnie na to konto, to należy ją przedłużyć
         const { provider, authorization_code } = authentication.handleRedirect(request);
-        const access_token = await provider.fetchAccessToken(authorization_code);
+        const access_token = await provider.fetchAccessToken(authorization_code, config.authentication.redirect_uri);
         const user_info = await provider.fetchUserInfo(access_token);
-        const { identity } = await storage.ensureAccount(provider.configuration.id, user_info.id, user_info.display_name, user_info.mail, true);
+        const { identity } = await storage.ensureAccount(config.authentication.id, user_info.id, user_info.display_name, user_info.mail, true);
         const session = await storage.createSession(client.id, identity.id);
         await storage.setActiveSession(client.id, session.id);
-        response.redirect(provider.configuration.return_uri);
+        response.redirect(config.authentication.return_uri);
     }
     catch (exception)
     {
@@ -169,9 +198,16 @@ app.delete('/session', text_parser, async (request, response) =>
 });
 
 const listening_port = process.env.PORT || 8080;
-// dotnet dev-certs https --export-path ./certificate.crt --no-password --format PEM
-// var key = fs.readFileSync('C:/inetpub/certificate.key');
-// var cert = fs.readFileSync('C:/inetpub/certificate.crt');
-// const server = https.createServer({ key, cert }, app);
-// server.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });
-app.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });
+
+if (process.env.node_env === 'local' )
+{
+    // dotnet dev-certs https --export-path ./certificate.crt --no-password --format PEM
+    var key = fs.readFileSync('C:/inetpub/certificate.key');
+    var cert = fs.readFileSync('C:/inetpub/certificate.crt');
+    const server = https.createServer({ key, cert }, app);
+    server.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });
+}
+else
+{
+    app.listen(listening_port, () => { console.log(`Server listening on port ${listening_port}...`); });
+}

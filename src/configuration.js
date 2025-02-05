@@ -2,29 +2,13 @@ import * as Auth from '@liquescens/auth-nodejs';
 import { SecretManagerServiceClient  } from '@google-cloud/secret-manager';
 import Ajv2020 from "ajv"
 
-/**
- * @returns {Promise<Configuration>}
- */
 export async function load()
 {
     const data = process.env.node_env === 'local' 
         ? await loadConfigurationFromLocalFile()
         : await loadConfigurationFromSecretManagerService();
-    const { application, cors, authentication } = await validateConfiguration(data);
-    const { id, redirect_uri, return_uri } = authentication;
-    /** @type {Record<string, import('@liquescens/auth-nodejs').OAuth2.Provider>} */
-    const providers = {};
-    for (const [id, properties] of Object.entries(authentication.providers))
-    {
-        const configuration = { ...properties, id, redirect_uri, return_uri }
-        switch (id)
-        {
-            case 'google': providers[id] = new Auth.OAuth2.Google(configuration); break;
-            case 'microsoft': providers[id] = new Auth.OAuth2.Microsoft(configuration); break;
-            case 'github': providers[id] = new Auth.OAuth2.GitHub(configuration); break;
-        }
-    }
-    return { application, authentication: { id, providers }, cors };
+    const configuration = await validateConfiguration(data);
+    return configuration;
 }
 
 /**

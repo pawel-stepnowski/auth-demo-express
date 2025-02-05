@@ -11,5 +11,5 @@
         "checkJs": true,
         "typeRoots": [ "./src/*.d.ts" ]
     },
-    "exclude": [ "docs", "build" ]
+    "exclude": [ "docs", "build", "dist" ]
 }

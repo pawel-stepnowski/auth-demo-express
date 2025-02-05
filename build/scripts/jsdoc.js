@@ -7,6 +7,7 @@
  * @property {string} [const]
  * @property {string} [$ref]
  * @property {string} [$id]
+ * @property {string[]} [enum]
  */
 
 /**
@@ -31,60 +32,63 @@ export class TypeDeclarationBuilder
      */
     fromJsonSchema(name, schema)
     {
+        if (schema.type === 'string') return;
+        if (schema.type === undefined && schema.enum === undefined) return;
         if (schema.$id)
         {
             this._addNamespace(schema.$id, '', name);
         }
-        const properties = [];
-        for (const [property_name, property_schema] of Object.entries(schema.properties))
+        const record_schema = schema.properties ? schema.properties["^.*$"] : undefined;
+        if (record_schema)
         {
-            if (property_schema.oneOf)
-            {
-                const type_names = [];
-                for (const one_of_schema of property_schema.oneOf)
-                {
-                    const type_name = this._getTypeName(property_name, one_of_schema, type_names.length);
-                    type_names.push(type_name);
-                    this.fromJsonSchema(type_name, one_of_schema);
-                }
-                properties.push(`${property_name}: ${type_names.join(' | ')}`); 
-            }
-            else if (property_schema.const)
-            {
-                properties.push(`${property_name}: "${property_schema.const}"`);
-            }
-            else if (property_schema.$ref)
-            {
-                properties.push(`${property_name}: ${this._referenceToTypeName(property_schema.$ref)}`);
-            }
-            else
-            {
-                switch (property_schema.type)
-                {
-                    case 'string': 
-                        properties.push(`${property_name}: string`);
-                        break;
-                    case 'object':
-                        const type_name = this._getTypeName(property_name, property_schema);
-                        this.fromJsonSchema(type_name, property_schema);
-                        properties.push(`${property_name}: ${type_name}`); 
-                        break;
-                    case undefined:
-                        properties.push(`${property_name}: any`); 
-                        break;
-                    default: 
-                        throw new Error(`Unknown type "${property_schema.type}" of property "${property_name}".`);
-                }
-            }
+            const type_name = this._getTypeName(`${name}Item`, record_schema);
+            this.fromJsonSchema(type_name, record_schema);
+            this._addType('', name, `type ${name} = Record<string, ${type_name}>`);
         }
-        const lines = 
-        [
-            `type ${name} =`,
-            `{`,
-            ...properties.map(line => '    ' + line),
-            `}`
-        ];
-        this._addType('', name, lines.join('\r\n'));
+        else if (schema.enum)
+        {
+            this._addType('', name, `type ${name} = ${schema.enum.map(value => `"${value}"`).join(' | ')}`);
+        }
+        else
+        {
+            const properties = [];
+            for (const [property_name, property_schema] of Object.entries(schema.properties))
+            {
+                if (property_schema.oneOf)
+                {
+                    const type_names = [];
+                    for (const one_of_schema of property_schema.oneOf)
+                    {
+                        const type_name = this._getTypeName(property_name, one_of_schema, type_names.length);
+                        type_names.push(type_name);
+                        this.fromJsonSchema(type_name, one_of_schema);
+                    }
+                    properties.push(`${property_name}: ${type_names.join(' | ')}`); 
+                }
+                else if (property_schema.const)
+                {
+                    properties.push(`${property_name}: "${property_schema.const}"`);
+                }
+                else if (property_schema.$ref)
+                {
+                    properties.push(`${property_name}: ${this._referenceToTypeName(property_schema.$ref)}`);
+                }
+                else
+                {
+                    const type_name = this._getTypeName(property_name, property_schema);
+                    this.fromJsonSchema(type_name, property_schema);
+                    properties.push(`${property_name}: ${type_name}`);
+                }
+            }
+            const lines = 
+            [
+                `type ${name} =`,
+                `{`,
+                ...properties.map(line => '    ' + line),
+                `}`
+            ];
+            this._addType('', name, lines.join('\r\n'));
+        }
     }
     
     /**
@@ -136,8 +140,15 @@ export class TypeDeclarationBuilder
      */
     _getTypeName(base_name, schema, one_of)
     {
+        if (schema.type === 'string') return 'string';
+        if (schema.type === undefined && schema.enum === undefined) return 'any';
+        base_name = base_name.split('_').map(part => capitalize(part)).join('');
         if (typeof one_of === 'number') return `${base_name}_${one_of}`;
         return base_name;
     }
 }
 
+function capitalize(value)
+{
+    return String(value).charAt(0).toUpperCase() + String(value).slice(1);
+}

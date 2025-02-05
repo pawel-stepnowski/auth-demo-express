@@ -44,7 +44,43 @@
         },
         "authentication":
         {
-
+            "type": "object",
+            "required": [ "id", "redirect_uri", "return_uri", "providers" ],
+            "properties":
+            {
+                "id": { "type": "string" },
+                "redirect_uri": { "type": "string" },
+                "return_uri": { "type": "string" },
+                "providers": 
+                {
+                    "type": "object",
+                    "properties":
+                    {
+                        "^.*$": 
+                        { 
+                            "type": "object",
+                            "required": [ "client_id", "client_secret", "token_uri", "user_info" ],
+                            "properties": 
+                            {
+                                "type": { "type": "string" },
+                                "client_id": { "type": "string" },
+                                "client_secret": { "type": "string" },
+                                "token_uri": { "type": "string" },
+                                "user_info":
+                                {
+                                    "type": "object",
+                                    "required": [ "uri", "token_pass_method" ],
+                                    "properties": 
+                                    {
+                                        "uri": { "type": "string" },
+                                        "token_pass_method": { "enum": [ "header", "query" ] }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
         "cors":
         {
