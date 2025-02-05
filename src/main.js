@@ -149,9 +149,11 @@ app.get('/auth', async (request, response) =>
     }
     catch (exception)
     {
+        console.error('test');
+        if (exception instanceof Error) console.error(exception.stack);
         console.error(exception);
-        const message = exception instanceof Auth.AuthenticationException ? exception.message : 'TODO';
-        response.status(400).send(message);
+        // const message = exception instanceof Auth.AuthenticationError ? exception.message : (exception ?? 'TODO');
+        response.status(400).send(exception);
     }
 });
 
@@ -171,7 +173,7 @@ app.put('/session', text_parser, async (request, response) =>
     catch (exception)
     {
         console.error(exception);
-        const message = exception instanceof Auth.AuthenticationException ? exception.message : 'TODO';
+        const message = exception instanceof Auth.AuthenticationError ? exception.message : 'TODO';
         response.status(400).send(message);
     }
 });
@@ -192,7 +194,7 @@ app.delete('/session', text_parser, async (request, response) =>
     catch (exception)
     {
         console.error(exception);
-        const message = exception instanceof Auth.AuthenticationException ? exception.message : 'TODO';
+        const message = exception instanceof Auth.AuthenticationError ? exception.message : 'TODO';
         response.status(400).send(message);
     }
 });
