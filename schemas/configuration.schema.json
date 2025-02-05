@@ -45,10 +45,11 @@
         "authentication":
         {
             "type": "object",
-            "required": [ "id", "redirect_uri", "return_uri", "providers" ],
+            "required": [ "id", "base_uri", "redirect_uri", "return_uri", "providers" ],
             "properties":
             {
                 "id": { "type": "string" },
+                "base_uri": { "type": "string" },
                 "redirect_uri": { "type": "string" },
                 "return_uri": { "type": "string" },
                 "providers": 
@@ -59,7 +60,7 @@
                         "^.*$": 
                         { 
                             "type": "object",
-                            "required": [ "client_id", "client_secret", "token_uri", "user_info" ],
+                            "required": [ "type", "client_id", "client_secret", "token_uri", "user_info" ],
                             "properties": 
                             {
                                 "type": { "type": "string" },

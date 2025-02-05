@@ -58,9 +58,9 @@ function getClient(request)
 function getConfiguration()
 {
     const service_id = config.authentication.id;
-    const base_uri = config.authentication.redirect_uri;
+    const base_uri = config.authentication.base_uri;
     const redirect_uri = config.authentication.redirect_uri;
-    const providers = Object.values(config.authentication.providers).map(({ client_id, type }) => ({ client_id, type }));
+    const providers = Object.values(config.authentication.providers).map(({ client_id, type }) => ({ type, parameters: { client_id } }));
     return { service_id, base_uri, redirect_uri, providers };
 }
 
@@ -139,10 +139,10 @@ app.get('/auth', async (request, response) =>
         const client = getClient(request);
         if (!client) { response.status(404).send(); return; }
         // TODO: jeśli istnieje sesja dokładnie na to konto, to należy ją przedłużyć
-        const { provider, authorization_code } = authentication.handleRedirect(request);
+        const { provider, provider_id, authorization_code } = authentication.handleRedirect(request);
         const access_token = await provider.fetchAccessToken(authorization_code, config.authentication.redirect_uri);
         const user_info = await provider.fetchUserInfo(access_token);
-        const { identity } = await storage.ensureAccount(config.authentication.id, user_info.id, user_info.display_name, user_info.mail, true);
+        const { identity } = await storage.ensureAccount(provider_id, user_info.id, user_info.display_name, user_info.mail, true);
         const session = await storage.createSession(client.id, identity.id);
         await storage.setActiveSession(client.id, session.id);
         response.redirect(config.authentication.return_uri);

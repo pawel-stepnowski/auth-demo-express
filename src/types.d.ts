@@ -29,6 +29,7 @@ type Providers = Record<string, ProvidersItem>
 type Authentication =
 {
     id: string
+    base_uri: string
     redirect_uri: string
     return_uri: string
     providers: Providers

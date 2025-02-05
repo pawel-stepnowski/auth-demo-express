@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@google-cloud/secret-manager": "^5.6.0",
-    "@liquescens/auth-js": "^0.0.7",
-    "@liquescens/auth-nodejs": "^0.0.6",
+    "@liquescens/auth-js": "^0.0.9",
+    "@liquescens/auth-nodejs": "^0.0.7",
     "ajv": "^8.17.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
